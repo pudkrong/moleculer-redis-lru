@@ -1,0 +1,21 @@
+{
+  "name": "moleculer-redis-lru",
+  "version": "1.0.0",
+  "description": "Moleculer redis lru cacher",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "moleculer",
+    "redis",
+    "lru",
+    "cacher"
+  ],
+  "author": "Pisut Sritrakulchai",
+  "license": "ISC",
+  "dependencies": {
+    "moleculer": "^0.14.16",
+    "redis-lru": "^0.6.0"
+  }
+}
