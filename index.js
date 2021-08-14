@@ -17,15 +17,15 @@ const LRU = require('redis-lru');
 /**
  * Cacher factory for Redis
  *
- * @class RedisCacher
+ * @class RedisLRUCacher
  */
 class RedisLRUCacher extends BaseCacher {
   /**
-	 * Creates an instance of RedisCacher.
+	 * Creates an instance of RedisLRUCacher.
 	 *
 	 * @param {object} opts
 	 *
-	 * @memberof RedisCacher
+	 * @memberof RedisLRUCacher
 	 */
   constructor (opts) {
     if (typeof opts === 'string') opts = { redis: opts };
@@ -86,7 +86,7 @@ class RedisLRUCacher extends BaseCacher {
     });
 
     // Create redis-lru
-    this.client = LRU(this.clientRedis, this.opts);
+    this.client = LRU(this.clientRedis, Object.assign({ maxAge: this.opts.ttl }, this.opts));
 
     try {
       Redlock = require('redlock');
@@ -186,13 +186,14 @@ class RedisLRUCacher extends BaseCacher {
 	 *
 	 * @memberof Cacher
 	 */
-  set (key, data, ttl) {
+  set (key, data, ttl = null) {
     this.metrics.increment(METRIC.MOLECULER_CACHER_SET_TOTAL);
     const timeEnd = this.metrics.timer(METRIC.MOLECULER_CACHER_SET_TIME);
 
     this.logger.debug(`SET ${key}`);
 
     if (ttl == null) ttl = this.opts.ttl;
+
 
     let p;
     if (ttl) {
@@ -229,7 +230,7 @@ class RedisLRUCacher extends BaseCacher {
     const keysToDelete = deleteTargets.map(key => this.prefix + key);
     this.logger.debug(`DELETE ${keysToDelete}`);
     const p = keysToDelete.map(key => {
-      return self.del(key);
+      return self.client.del(key);
     });
 
     return Promise.all(p)

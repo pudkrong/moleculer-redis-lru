@@ -4,7 +4,7 @@
   "description": "Moleculer redis lru cacher",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "moleculer",
@@ -17,5 +17,9 @@
   "dependencies": {
     "moleculer": "^0.14.16",
     "redis-lru": "^0.6.0"
+  },
+  "devDependencies": {
+    "ioredis": "^4.27.7",
+    "jest": "^27.0.6"
   }
 }
